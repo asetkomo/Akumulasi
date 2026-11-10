@@ -32,7 +32,7 @@ export default function AmortApp() {
   }
 
   return (<div>
-    <div className="mut">Format IV.H.1 (Penyusutan JIJ dan Amortisasi ATB): kolom disusun ulang sesuai format Excel Anda dan dilengkapi pivot per kode aset 6 digit. Angka diambil apa adanya dari PDF, <b>tidak dihitung ulang</b>.</div>
+    <p className="intro">Format IV.H.1 (Penyusutan JIJ dan Amortisasi ATB): kolom disusun ulang sesuai format Excel Anda dan dilengkapi pivot per kode aset 6 digit. Angka diambil apa adanya dari PDF, <b>tidak dihitung ulang</b>.</p>
     <div className="card"><h2>1. Unggah PDF dari SIPD e-BMD</h2>
       <input type="file" accept="application/pdf" onChange={onPdf} disabled={!!busy} />
       {busy && <p>{busy}</p>}{msg && <p className="WARN">{msg}</p>}

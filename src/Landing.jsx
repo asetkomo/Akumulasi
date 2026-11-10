@@ -23,48 +23,106 @@ const PERIKSA = [
 
 export default function Landing({ src }) {
   const tahun = new Date().getFullYear();
-  return (<div className="landing">
-    <section className="hero">
-      <div>
-        <h1>Dari PDF e-BMD ke Excel penyusutan, lengkap dengan catatan pemeriksaannya.</h1>
-        <p className="lead">Unggah laporan Daftar BMD pada Pengguna Barang dari SIPD. Aplikasi membaca barangnya, menghitung penyusutan per bulan dengan rumus Excel yang bisa ditelusuri, lalu menandai data yang janggal.</p>
-        <div className="cta"><a className="btn" href="#/gedung">Hitung gedung &amp; bangunan</a><a className="btn sec" href="#/mesin">Hitung peralatan &amp; mesin</a></div>
+  return (
+    <div className="landing">
+      <section className="hero">
+        <div>
+          <h1>Dari PDF e-BMD ke Excel penyusutan, lengkap dengan catatan pemeriksaannya.</h1>
+          <p className="lead">Unggah laporan Daftar BMD pada Pengguna Barang dari SIPD. Aplikasi membaca barangnya, menghitung penyusutan per bulan dengan rumus Excel yang bisa ditelusuri, lalu menandai data yang janggal.</p>
+          <div className="cta">
+            <a className="btn" href="#/gedung">Hitung gedung &amp; bangunan</a>
+            <a className="btn sec" href="#/mesin">Hitung peralatan &amp; mesin</a>
+          </div>
+        </div>
+        <figure className="specimen">
+          <table>
+            <caption>Contoh isi sheet hasil</caption>
+            <thead>
+              <tr>
+                <th>Aset</th>
+                <th className="n">Nilai perolehan</th>
+                <th className="n">Beban tahun ini</th>
+                <th className="n">Nilai buku akhir</th>
+              </tr>
+            </thead>
+            <tbody>
+              {CONTOH.map((r) => (
+                <tr key={r[0]}>
+                  <td>{r[0]}</td>
+                  <td className="n">{r[1]}</td>
+                  <td className="n">{r[2]}</td>
+                  <td className="n">{r[3]}</td>
+                </tr>
+              ))}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td>JUMLAH</td>
+                <td className="n">4.210.000.000,00</td>
+                <td className="n">84.200.000,00</td>
+                <td className="n">3.527.383.333,33</td>
+              </tr>
+            </tfoot>
+          </table>
+          <figcaption>Angka ilustrasi, bukan data nyata.</figcaption>
+        </figure>
+      </section>
+
+      <h2 className="sec-title">Pilih jenis laporan</h2>
+      <p className="sec-note">Format PDF dari SIPD tidak sama. Pilih yang sesuai judul laporannya.</p>
+
+      <div className="choice">
+        <div>
+          <h3>Peralatan &amp; Mesin</h3>
+          <code>FORMAT II.O.2.2</code><br />
+          <code>Pelaporan/Daftar Barang/Daftar Barang Kuasa Pengguna Barang atau Daftar Barang Pengguna Barang </code>
+        </div>
+        <p>Cukup satu PDF. Masa manfaat diambil dari master kode barang. Bila masa manfaat tahun lalu keliru, selisih akumulasi awalnya dihitung sebagai koreksi.</p>
+        <div className="cta"><a className="btn" href="#/mesin">Buka</a></div>
       </div>
-      <figure className="specimen">
-        <table><caption>Contoh isi sheet hasil</caption>
-          <thead><tr><th>Aset</th><th className="n">Nilai perolehan</th><th className="n">Beban tahun ini</th><th className="n">Nilai buku akhir</th></tr></thead>
-          <tbody>{CONTOH.map((r) => <tr key={r[0]}><td>{r[0]}</td><td className="n">{r[1]}</td><td className="n">{r[2]}</td><td className="n">{r[3]}</td></tr>)}</tbody>
-          <tfoot><tr><td>JUMLAH</td><td className="n">4.210.000.000,00</td><td className="n">84.200.000,00</td><td className="n">3.527.383.333,33</td></tr></tfoot></table>
-        <figcaption>Angka ilustrasi, bukan data nyata.</figcaption>
-      </figure>
-    </section>
+      <div className="choice">
+        <div>
+          <h3>Gedung &amp; Bangunan</h3>
+          <code>FORMAT II.O.2.3</code><br />
+          <code>Pelaporan/Daftar Barang/Daftar Barang Kuasa Pengguna Barang atau Daftar Barang Pengguna Barang </code>
+        </div>
+        <p>PDF ditambah template saldo akhir tahun lalu: AKM, nilai buku, sisa masa manfaat, kapitalisasi, dan UPT. Hasilnya mengikuti format Excel penyusutan gedung.</p>
+        <div className="cta">
+          <a className="btn" href="#/gedung">Buka</a>
+          <button type="button" className="sec" onClick={() => unduhTemplate({ tahun })}>Unduh template</button>
+        </div>
+      </div>
+      <div className="choice">
+        <div>
+          <h3>JIJ &amp; Aset Tidak Berwujud</h3>
+          <code>FORMAT IV.H.1</code><br />
+          <code>Laporan Pengelolaan/Laporan Penyusutan </code>
+        </div>
+        <p>Cukup satu PDF. Kolom disusun ulang sesuai format Excel Anda dan dilengkapi pivot per kode aset 6 digit. Angka diambil apa adanya dari PDF, tidak dihitung ulang.</p>
+        <div className="cta"><a className="btn" href="#/amort">Buka</a></div>
+      </div>
 
-    <h2 className="eyebrow">Pilih jenis laporan</h2>
-    <div className="choice">
-      <div><h3>Peralatan &amp; Mesin</h3><code>FORMAT II.O.2.2</code></div>
-      <p>Cukup satu PDF. Masa manfaat diambil dari master kode barang. Bila masa manfaat tahun lalu keliru, selisih akumulasi awalnya dihitung sebagai koreksi.</p>
-      <div className="cta"><a className="btn" href="#/mesin">Buka</a></div>
+      <h2 className="sec-title">Alur kerja</h2>
+      <ol className="steps">
+        {LANGKAH.map(([t, d]) => (
+          <li key={t}>
+            <b>{t}</b>
+            <span>{d}</span>
+          </li>
+        ))}
+      </ol>
+
+      <h2 className="sec-title">Yang diperiksa otomatis</h2>
+      <ul className="checks">
+        {PERIKSA.map((t) => (
+          <li key={t}>{t}</li>
+        ))}
+      </ul>
+
+      <div className="foot-note">
+        <p className="lead">PDF dibaca di browser Anda dan tidak diunggah ke server. Data baru tersimpan di Supabase bila Anda masuk dan menekan Simpan. Hasilnya alat bantu hitung; verifikasi tetap terhadap dokumen sumber.</p>
+        <p className="mut small">Master masa manfaat: {src}</p>
+      </div>
     </div>
-    <div className="choice">
-      <div><h3>Gedung &amp; Bangunan</h3><code>FORMAT II.O.2.3</code></div>
-      <p>PDF ditambah template saldo akhir tahun lalu: AKM, nilai buku, sisa masa manfaat, kapitalisasi, dan UPT. Hasilnya mengikuti format Excel penyusutan gedung.</p>
-      <div className="cta"><a className="btn" href="#/gedung">Buka</a><button className="sec" onClick={() => unduhTemplate({ tahun })}>Unduh template</button></div>
-    </div>
-
-    <div className="choice">
-      <div><h3>JIJ &amp; Aset Tidak Berwujud</h3><code>FORMAT IV.H.1</code></div>
-      <p>Cukup satu PDF. Kolom disusun ulang sesuai format Excel Anda dan dilengkapi pivot per kode aset 6 digit. Angka diambil apa adanya dari PDF, tidak dihitung ulang.</p>
-      <div className="cta"><a className="btn" href="#/amort">Buka</a></div>
-    </div>
-
-    <h2 className="eyebrow">Alur kerja</h2>
-    <ol className="steps">{LANGKAH.map(([t, d]) => <li key={t}><b>{t}</b><span>{d}</span></li>)}</ol>
-
-    <h2 className="eyebrow">Yang diperiksa otomatis</h2>
-    <ul className="checks">{PERIKSA.map((t) => <li key={t}>{t}</li>)}</ul>
-
-    <h2 className="eyebrow">Data Anda</h2>
-    <p className="lead">PDF dibaca di browser Anda dan tidak diunggah ke server. Data baru tersimpan di Supabase bila Anda masuk dan menekan Simpan. Hasilnya alat bantu hitung; verifikasi tetap terhadap dokumen sumber.</p>
-    <p className="mut small">Master masa manfaat: {src}</p>
-  </div>);
+  );
 }

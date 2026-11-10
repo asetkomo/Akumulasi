@@ -47,7 +47,7 @@ export default function GedungApp({ masa, src }) {
   async function muat(r) { setBusy('Memuat…'); const all = await loadRun(r.id); setRows(all.filter((x) => x.type !== 'tpl')); setTpl({ rows: all.filter((x) => x.type === 'tpl'), tahunLalu: r.tahun - 1, warnings: [] }); setMeta({ pengguna: r.pengguna_barang }); setTahun(r.tahun); setNamaPdf(r.nama_file); setNamaTpl(r.params?.namaTpl || '(tersimpan)'); setBusy(''); }
 
   return (<div>
-    <div className="mut">Gedung & Bangunan (FORMAT II.O.2.3): PDF e-BMD + template saldo awal (Format_penyusutan_gedung.xlsx) → Excel penyusutan. Master masa manfaat: {src}.</div>
+    <p className="intro">Gedung &amp; Bangunan (FORMAT II.O.2.3): PDF e-BMD + template saldo awal (Format_penyusutan_gedung.xlsx) → Excel penyusutan. Master masa manfaat: {src}.</p>
     <div className="card"><h2>1. Unggah PDF dan template</h2><div className="grid">
       <div><label>PDF Daftar BMD Gedung & Bangunan (e-BMD)</label><input type="file" accept="application/pdf" onChange={onPdf} disabled={!masa || !!busy} /></div>
       <div><label>Template saldo awal (.xlsx): NIBAR, AKM, nilai buku, sisa masa manfaat, kapitalisasi, UPT</label><input type="file" accept=".xlsx" onChange={onTpl} disabled={!masa || !!busy} /></div></div>

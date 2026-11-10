@@ -49,7 +49,7 @@ function MesinApp() {
   async function muat(r) { setBusy('Memuat…'); setRows(await loadRun(r.id)); setMeta({ pengguna: r.pengguna_barang }); setTahun(r.tahun); setOffset(r.params?.offset || 0); setBatas(r.params?.batas || 0); setRules(r.params?.rules || []); setNamaFile(r.nama_file); setBusy(''); }
 
   return (<div>
-        <div className="mut">Ubah PDF e-BMD (Daftar BMD Pengguna Barang, FORMAT II.O.2.2) menjadi Excel penyusutan garis lurus. Master masa manfaat: {src}.</div>
+        <p className="intro">Ubah PDF e-BMD (Daftar BMD Pengguna Barang, FORMAT II.O.2.2) menjadi Excel penyusutan garis lurus. Master masa manfaat: {src}.</p>
 
     <div className="card"><h2>1. Unggah PDF dari SIPD e-BMD</h2>
       <input type="file" accept="application/pdf" onChange={onFile} disabled={!masa || !!busy} />
@@ -108,17 +108,32 @@ function MesinApp() {
 const viewFromHash = () => (location.hash === '#/mesin' ? 'mesin' : location.hash === '#/gedung' ? 'gedung' : location.hash === '#/amort' ? 'amort' : 'home');
 const JUDUL = { mesin: 'Peralatan & Mesin', gedung: 'Gedung & Bangunan', amort: 'JIJ & Aset Tidak Berwujud' };
 
+function bacaTema() {
+  const t = document.documentElement.dataset.theme;
+  return t === 'gelap' || t === 'terang' ? t : 'terang';
+}
+
 export default function App() {
   const [view, setView] = useState(viewFromHash); const [m, setM] = useState({ masa: null, src: 'memuat…' });
+  const [tema, setTema] = useState(bacaTema);
   useEffect(() => {
     getMaster().then(setM);
     const f = () => { setView(viewFromHash()); window.scrollTo(0, 0); }; window.addEventListener('hashchange', f); return () => window.removeEventListener('hashchange', f);
   }, []);
   useEffect(() => { document.title = view === 'home' ? 'Penghitung Penyusutan Aset Tetap' : `${JUDUL[view]} · Penyusutan Aset Tetap`; }, [view]);
+  useEffect(() => {
+    document.documentElement.dataset.theme = tema;
+    try { localStorage.setItem('tema', tema); } catch { /* abaikan kuota / mode privat */ }
+  }, [tema]);
   const link = (k, t) => <a href={k === 'home' ? '#/' : '#/' + k} className={view === k ? 'nav on' : 'nav'} aria-current={view === k ? 'page' : undefined}>{t}</a>;
   return (<>
     <header className="top"><a href="#/" className="brand">Penyusutan Aset Tetap<small>dari PDF SIPD e-BMD</small></a>
-      <nav>{link('home', 'Beranda')}{link('mesin', 'Peralatan & Mesin')}{link('gedung', 'Gedung & Bangunan')}{link('amort', 'JIJ & ATB')}</nav></header>
+      <nav>{link('home', 'Beranda')}{link('mesin', 'Peralatan & Mesin')}{link('gedung', 'Gedung & Bangunan')}{link('amort', 'JIJ & ATB')}</nav>
+      <div className="tema" role="group" aria-label="Tampilan">
+        <button type="button" className={tema === 'terang' ? 'on' : ''} aria-pressed={tema === 'terang'} onClick={() => setTema('terang')}>Terang</button>
+        <button type="button" className={tema === 'gelap' ? 'on' : ''} aria-pressed={tema === 'gelap'} onClick={() => setTema('gelap')}>Gelap</button>
+      </div>
+    </header>
     <main>
       {view === 'home' && <Landing src={m.src} />}
       {view !== 'home' && <h1>{JUDUL[view]}</h1>}
